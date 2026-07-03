@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Countdown</title>
     
-    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/der46er/webseite@main/assets/favicon.png">
+    <link id="dynamic-favicon" rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/der46er/webseite@main/assets/favicon.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,9 +51,8 @@
             font-weight: 900;
             letter-spacing: 4px;
             margin-bottom: 15px;
-            /* Subtle futuristic text glow */
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            font-variant-numeric: tabular-nums; /* Prevents numbers from shifting/wobbling */
+            font-variant-numeric: tabular-nums;
         }
 
         .hashtag {
@@ -128,33 +127,78 @@
             const now = new Date().getTime();
             const difference = targetDate - now;
 
-            // If the countdown is finished, lock it at zero
             if (difference <= 0) {
                 document.getElementById("timer").innerHTML = "00D 00H 00M 00S";
                 clearInterval(intervalId);
                 return;
             }
 
-            // Time calculations
             const days = Math.floor(difference / (1000 * 60 * 60 * 24));
             const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-            // Pad numbers with leading zeros for visual consistency
             const formatDays = String(days).padStart(2, '0');
             const formatHours = String(hours).padStart(2, '0');
             const formatMinutes = String(minutes).padStart(2, '0');
             const formatSeconds = String(seconds).padStart(2, '0');
 
-            // Display result with capitalized units for the aesthetic
             document.getElementById("timer").innerHTML = 
                 `${formatDays}D ${formatHours}H ${formatMinutes}M ${formatSeconds}S`;
         }
 
-        // Run immediately on load, then update every second
         updateCountdown();
         const intervalId = setInterval(updateCountdown, 1000);
+
+        // --- DYNAMIC FAVICON RECOLORING SCRIPT ---
+        function recolorFavicon(targetColor = 'white') {
+            const img = new Image();
+            // Enable cross-origin loading so the canvas can manipulate pixels without security flags
+            img.crossOrigin = "Anonymous"; 
+            img.src = "https://cdn.jsdelivr.net/gh/der46er/webseite@main/assets/favicon.png";
+
+            img.onload = function() {
+                // Create an invisible canvas element
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width || 32;
+                canvas.height = img.height || 32;
+                const ctx = canvas.getContext('2d');
+
+                // Draw your original icon onto the canvas
+                ctx.drawImage(img, 0, 0);
+
+                // Get pixel information
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+
+                // Loop through every single pixel (r, g, b, a)
+                for (let i = 0; i < data.length; i += 4) {
+                    const alpha = data[i + 3];
+
+                    // If pixel isn't transparent, force rewrite it to solid Black or White
+                    if (alpha > 0) {
+                        if (targetColor === 'white') {
+                            data[i]     = 255; // Red
+                            data[i + 1] = 255; // Green
+                            data[i + 2] = 255; // Blue
+                        } else if (targetColor === 'black') {
+                            data[i]     = 0;   // Red
+                            data[i + 1] = 0;   // Green
+                            data[i + 2] = 0;   // Blue
+                        }
+                    }
+                }
+
+                // Put the altered pixel data back on the canvas
+                ctx.putImageData(imageData, 0, 0);
+
+                // Convert canvas back into a clean Data URL image string and apply it to the link tag
+                document.getElementById('dynamic-favicon').href = canvas.toDataURL('image/png');
+            };
+        }
+
+        // Run script: Change to 'white' or 'black' depending on what looks best in your browser tabs!
+        recolorFavicon('white'); 
     </script>
 </body>
 </html>
