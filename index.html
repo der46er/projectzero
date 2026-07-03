@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown</title>
+    <style>
+        /* Reset and dark theme setup */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Prevent scrolling globally */
+        html, body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            height: 100vh;
+            height: 100lvh;
+            width: 100vw;
+            overflow: hidden; 
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-col: column;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            position: relative;
+        }
+
+        /* Countdown Container */
+        .countdown-container {
+            text-align: center;
+        }
+
+        .timer {
+            font-size: 4rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        /* Hidden/Barely visible footer aligned to the bottom center */
+        footer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        footer p {
+            cursor: pointer;
+            color: #27272a; /* Zinc-800 equivalent: blending deeply into the black background */
+            font-size: 11px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.25; /* Barely visible at first glance */
+            transition: all 0.3s ease;
+        }
+
+        footer p:hover {
+            opacity: 1;
+            color: #ffffff;
+        }
+
+        /* Responsive scaling for smaller screens */
+        @media (max-width: 600px) {
+            .timer {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="countdown-container">
+        <div class="timer" id="timer">00d 00h 00m 00s</div>
+    </div>
+
+    <!-- Centered bottom copyright link matching your reference structural actions -->
+    <footer>
+        <p onclick="window.location.href='https://thataustrianone.eu/legal/'">
+            © <span id="year">2026</span> — @der_46er
+        </p>
+    </footer>
+
+    <script>
+        // Synchronize current year matching page behaviors
+        document.getElementById('year').innerText = new Date().getFullYear();
+
+        // Target Date: March 31, 2028, 00:00:00
+        const targetDate = new Date("March 31, 2028 00:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            // If the countdown is finished, lock it at zero
+            if (difference <= 0) {
+                document.getElementById("timer").innerHTML = "00d 00h 00m 00s";
+                clearInterval(intervalId);
+                return;
+            }
+
+            // Time calculations
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            // Pad numbers with leading zeros for visual consistency
+            const formatDays = String(days).padStart(2, '0');
+            const formatHours = String(hours).padStart(2, '0');
+            const formatMinutes = String(minutes).padStart(2, '0');
+            const formatSeconds = String(seconds).padStart(2, '0');
+
+            // Display result
+            document.getElementById("timer").innerHTML = 
+                `${formatDays}d ${formatHours}h ${formatMinutes}m ${formatSeconds}s`;
+        }
+
+        // Run immediately on load, then update every second
+        updateCountdown();
+        const intervalId = setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
