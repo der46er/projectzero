@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Countdown</title>
+    
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/der46er/webseite@main/assets/favicon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
         /* Reset and dark theme setup */
         * {
@@ -16,7 +23,7 @@
         html, body {
             background-color: #000000;
             color: #ffffff;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Orbitron', sans-serif;
             height: 100vh;
             height: 100lvh;
             width: 100vw;
@@ -27,7 +34,6 @@
 
         body {
             display: flex;
-            flex-col: column;
             justify-content: center;
             align-items: center;
             user-select: none;
@@ -37,13 +43,26 @@
         /* Countdown Container */
         .countdown-container {
             text-align: center;
+            padding: 0 20px;
         }
 
         .timer {
-            font-size: 4rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            /* Subtle futuristic text glow */
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            font-variant-numeric: tabular-nums; /* Prevents numbers from shifting/wobbling */
+        }
+
+        .hashtag {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 6px;
+            color: #a1a1aa; /* Zinc-400 */
+            text-transform: uppercase;
+            opacity: 0.7;
         }
 
         /* Hidden/Barely visible footer aligned to the bottom center */
@@ -57,7 +76,7 @@
 
         footer p {
             cursor: pointer;
-            color: #27272a; /* Zinc-800 equivalent: blending deeply into the black background */
+            color: #27272a; /* Zinc-800: blends deeply into the black background */
             font-size: 11px;
             font-weight: 900;
             font-style: italic;
@@ -73,9 +92,14 @@
         }
 
         /* Responsive scaling for smaller screens */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .timer {
-                font-size: 2rem;
+                font-size: 2.2rem;
+                letter-spacing: 2px;
+            }
+            .hashtag {
+                font-size: 0.9rem;
+                letter-spacing: 4px;
             }
         }
     </style>
@@ -83,10 +107,10 @@
 <body>
 
     <div class="countdown-container">
-        <div class="timer" id="timer">00d 00h 00m 00s</div>
+        <div class="timer" id="timer">00D 00H 00M 00S</div>
+        <div class="hashtag">#pr0jectz3ro</div>
     </div>
 
-    <!-- Centered bottom copyright link matching your reference structural actions -->
     <footer>
         <p onclick="window.location.href='https://thataustrianone.eu/legal/'">
             © <span id="year">2026</span> — @der_46er
@@ -106,7 +130,7 @@
 
             // If the countdown is finished, lock it at zero
             if (difference <= 0) {
-                document.getElementById("timer").innerHTML = "00d 00h 00m 00s";
+                document.getElementById("timer").innerHTML = "00D 00H 00M 00S";
                 clearInterval(intervalId);
                 return;
             }
@@ -123,9 +147,9 @@
             const formatMinutes = String(minutes).padStart(2, '0');
             const formatSeconds = String(seconds).padStart(2, '0');
 
-            // Display result
+            // Display result with capitalized units for the aesthetic
             document.getElementById("timer").innerHTML = 
-                `${formatDays}d ${formatHours}h ${formatMinutes}m ${formatSeconds}s`;
+                `${formatDays}D ${formatHours}H ${formatMinutes}M ${formatSeconds}S`;
         }
 
         // Run immediately on load, then update every second
