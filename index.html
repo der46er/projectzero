@@ -19,13 +19,13 @@
             box-sizing: border-box;
         }
 
-        /* Prevent scrolling globally */
+        /* Prevent scrolling globally across all viewports */
         html, body {
             background-color: #000000;
             color: #ffffff;
             font-family: 'Orbitron', sans-serif;
             height: 100vh;
-            height: 100lvh;
+            height: 100lvh; /* Modern locked viewport height for mobile browsers */
             width: 100vw;
             overflow: hidden; 
             margin: 0;
@@ -44,6 +44,7 @@
         .countdown-container {
             text-align: center;
             padding: 0 20px;
+            width: 100%;
         }
 
         .timer {
@@ -67,13 +68,16 @@
         /* Hidden/Barely visible footer aligned to the bottom center */
         footer {
             position: absolute;
-            bottom: 20px;
+            bottom: 24px; /* Slightly adjusted padding to make sure it clears mobile system gestures */
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
+            width: 100%;
+            text-align: center;
         }
 
         footer p {
+            display: inline-block;
             cursor: pointer;
             color: #27272a; /* Zinc-800: blends deeply into the black background */
             font-size: 11px;
@@ -83,22 +87,28 @@
             text-transform: uppercase;
             opacity: 0.25; /* Barely visible at first glance */
             transition: all 0.3s ease;
+            padding: 10px; /* Expands click/touch target size safely for mobile fingers */
         }
 
-        footer p:hover {
+        footer p:hover, footer p:active {
             opacity: 1;
             color: #ffffff;
         }
 
-        /* Responsive scaling for smaller screens */
+        /* Responsive scaling ensuring it looks flawless on mobile screens */
         @media (max-width: 768px) {
             .timer {
                 font-size: 2.2rem;
                 letter-spacing: 2px;
+                margin-bottom: 8px;
             }
             .hashtag {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
                 letter-spacing: 4px;
+            }
+            footer p {
+                font-size: 10px;
+                opacity: 0.35; /* Slightly increased fallback visibility on mobile screens due to varied panel brightness */
             }
         }
     </style>
@@ -153,51 +163,41 @@
         // --- DYNAMIC FAVICON RECOLORING SCRIPT ---
         function recolorFavicon(targetColor = 'white') {
             const img = new Image();
-            // Enable cross-origin loading so the canvas can manipulate pixels without security flags
             img.crossOrigin = "Anonymous"; 
             img.src = "https://cdn.jsdelivr.net/gh/der46er/webseite@main/assets/favicon.png";
 
             img.onload = function() {
-                // Create an invisible canvas element
                 const canvas = document.createElement('canvas');
                 canvas.width = img.width || 32;
                 canvas.height = img.height || 32;
                 const ctx = canvas.getContext('2d');
 
-                // Draw your original icon onto the canvas
                 ctx.drawImage(img, 0, 0);
 
-                // Get pixel information
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const data = imageData.data;
 
-                // Loop through every single pixel (r, g, b, a)
                 for (let i = 0; i < data.length; i += 4) {
                     const alpha = data[i + 3];
 
-                    // If pixel isn't transparent, force rewrite it to solid Black or White
                     if (alpha > 0) {
                         if (targetColor === 'white') {
-                            data[i]     = 255; // Red
-                            data[i + 1] = 255; // Green
-                            data[i + 2] = 255; // Blue
+                            data[i]     = 255;
+                            data[i + 1] = 255;
+                            data[i + 2] = 255;
                         } else if (targetColor === 'black') {
-                            data[i]     = 0;   // Red
-                            data[i + 1] = 0;   // Green
-                            data[i + 2] = 0;   // Blue
+                            data[i]     = 0;
+                            data[i + 1] = 0;
+                            data[i + 2] = 0;
                         }
                     }
                 }
 
-                // Put the altered pixel data back on the canvas
                 ctx.putImageData(imageData, 0, 0);
-
-                // Convert canvas back into a clean Data URL image string and apply it to the link tag
                 document.getElementById('dynamic-favicon').href = canvas.toDataURL('image/png');
             };
         }
 
-        // Run script: Change to 'white' or 'black' depending on what looks best in your browser tabs!
         recolorFavicon('white'); 
     </script>
 </body>
