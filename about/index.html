@@ -62,20 +62,18 @@
         /* The White Outline Box */
         .outline-box {
             width: 100%;
-            max-height: 50vh; /* Keeps it perfectly proportioned on mobile and desktop */
+            max-height: 50vh;
             border: 1px solid #ffffff;
             background-color: transparent;
             padding: 30px;
             text-align: left;
-            overflow-y: auto; /* Allows scrolling inside the box only if text is long */
+            overflow-y: auto;
             box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
             
-            /* Custom scrollbar styles for a clean, futuristic look */
             scrollbar-width: thin;
             scrollbar-color: #27272a transparent;
         }
 
-        /* Custom scrollbar for Webkit browsers */
         .outline-box::-webkit-scrollbar {
             width: 4px;
         }
@@ -92,8 +90,8 @@
             line-height: 1.8;
             font-weight: 400;
             letter-spacing: 1px;
-            color: #e4e4e7; /* Zinc-200 */
-            white-space: pre-wrap; /* Preserves paragraphs and line breaks from the .txt file */
+            color: #e4e4e7;
+            white-space: pre-wrap;
         }
 
         /* Bottom Footer */
@@ -167,11 +165,12 @@
         // Synchronize current year matching page behaviors
         document.getElementById('year').innerText = new Date().getFullYear();
 
-        // Fetch and load the local text file
+        // Fetch and load the local text file (Corrected directory relative path)
         async function loadAboutText() {
             const contentElement = document.getElementById('about-content');
             try {
-                const response = await fetch('assets/txt-files/about.txt');
+                // Corrected route steps up one level out of /about to find assets/
+                const response = await fetch('../assets/txt-files/about.txt');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
